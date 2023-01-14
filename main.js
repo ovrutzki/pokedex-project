@@ -13,7 +13,7 @@ load.onclick = function (){
     return (i , x);
 }
 function showPokemon (i, x){
-    const gallery = document.querySelector('.gallery');
+    const gallery = document.getElementById('gall');
     for ( i ; i < x; i++) {
         const unit = myMock[i];
         let square = document.createElement('div');
@@ -33,8 +33,7 @@ function showPokemon (i, x){
         square.appendChild(serial);
         square.appendChild(picture);
         square.appendChild(name);
-
-        gallery.appendChild(square); 
+        gallery.append(square); 
     }
 }
 
@@ -220,4 +219,22 @@ document.addEventListener('click', (e) =>{
   }
 );
 
+function greenColor() {
+    let b = document.getElementById('try');
+    if (window.location.href === "http://127.0.0.1:5500/pokedex/pokedex.html") {
+        document.getElementById('home').style.background = 'rgba(148, 217, 126, 1)';
+        document.getElementById('a-home').style.color = 'rgb(0, 0, 0)';
+        document.getElementById('a-favorite').style.color = 'rgb(255, 255, 255)';
+        console.log('true');
+    } else if (window.location.href === 'http://127.0.0.1:5500/pokedex/favorites.html'){
+        document.getElementById('a-home').style.color = 'rgb(255, 255, 255)';
+        document.getElementById('home').style.background = ' rgba(2, 1, 102, 1)';
+        document.getElementById('favorite').style.background = 'rgba(148, 217, 126, 1)';
+        document.getElementById('a-favorite').style.color = 'rgb(0, 0, 0)';
+        console.log('false');
+        console.log(window.location.href);
+    }
+    
+};
+greenColor();
 
