@@ -98,18 +98,17 @@ function createModal (i, x){
         let icone2 = document.createElement('i');
         icone2.id = `like2-${unit.id}`
         icone2.className = "fa-solid fa-heart";
-        icone2.favorite = false;
+        modalContent.favorite = false;
         icone2.style.display = 'none';
         icone.onclick = () => {
-            if (icone2.favorite === false) {
+            if ( modalContent.favorite === false) {
                 icone2.style.display = 'flex';
-                icone2.favorite = !icone2.favorite;
-                console.log(icone2.favorite);
-            } else if (icone2.favorite === true){
+                modalContent.favorite = !modalContent.favorite;
+            } else if (modalContent.favorite === true){
                 icone2.style.display = 'none';
-                icone2.favorite = !icone2.favorite;
-                console.log(icone2.favorite, modalContent.id);
-            }
+                modalContent.favorite = !modalContent.favorite;
+            };
+        
         };
             right.appendChild(description);      
             right.appendChild(stats);
@@ -237,4 +236,3 @@ function greenColor() {
     
 };
 greenColor();
-
