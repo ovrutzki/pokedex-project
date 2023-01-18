@@ -1,26 +1,32 @@
+'use strict';
+
 import data from "./assets/pokedex.json" assert {type: "json"};
-const pokemonMock = localStorage.setItem('pokedex', JSON.stringify(data));
-let myMock = JSON.parse(localStorage.getItem('pokedex')) || [];
+// const pokemonMock = localStorage.setItem('pokedex', JSON.stringify(data));
+
 let x = 12;
 let i = 0;
-const load = document.querySelector('.load-more')
+const load = document.querySelector('.load-more');
+// counter for making the load more btn load and create 12 more cards.
 load.onclick = function (){
     x += 12;
     i += 12;
     showPokemon (i, x);
     createModal(i, x);
-    pokeType(myMock, i, x);
+    pokeType(data, i, x);
+    areLike(i, x);
     return (i , x);
 }
+// create div for each item in the Json file.
 function showPokemon (i, x){
-    const gallery = document.getElementById('gall');
-    for ( i ; i < x; i++) {
-        const unit = myMock[i];
+    const gallery = document.getElementById('gall'); /*choose the main div for the cards*/
+    for ( i ; i < x; i++) { /**iterate 12 time on the Json. */
+        const unit = data[i];
         let square = document.createElement('div');
         square.className = 'square'
         square.id = unit.id;
         let picture = document.createElement('img');
         picture.className = 'picture';
+        // picture.id = `${unit.id + 0.5}`;
         picture.src = `${unit.image.hires}`;
         picture.alt = `${unit.name.english}`;
         let serial = document.createElement('p');
@@ -35,19 +41,35 @@ function showPokemon (i, x){
         square.appendChild(name);
         gallery.append(square); 
     }
-}
-
-            
+}          
 showPokemon (i, x);  
 
+document.addEventListener('click', (e) =>{
+    let elementId = e.target.id;
+    let test = parseInt(elementId);
+    if (test) {
+        let modal = document.getElementById(`modal-content-${(elementId)}`); 
+        modal.style.display = 'flex';
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    } 
+  });
+
+// create the modal for each pokemon un the Json. iterate 12 times. according to the counter.
 function createModal (i, x){
     for ( i ; i < x; i++) {
-        const unit = myMock[i];
-        let square = document.getElementById(`${unit.id}`);
-        let modalContent = document.createElement('div');
+        const unit = data[i];
+        let square = document.getElementById(`${unit.id}`); /** choosing the specific Div for the modal */
+
+        let modalContent = document.createElement('div'); /**create the main page for the modal */
         modalContent.id = `modal-content-${unit.id}`;
         modalContent.className = 'modal-content';
-        let modal = document.createElement('div');
+        modalContent.innerHTML = `<div id="back-home"><img src="./assets/Vector.png" alt=""><a href="./pokedex.html">Home page</a></div>`;
+
+        let modal = document.createElement('div'); /**create the card with the details */
         modal.className = 'modal';
         let serial = document.createElement('p');
         serial.id=`${unit.id}`;
@@ -77,9 +99,9 @@ function createModal (i, x){
         let info ="";
         let total ="";
         let value = 0;
-        for (let x in myMock[i].base) {
-            value += myMock[i].base[x];
-            info += `${x}:${myMock[i].base[x]} `; 
+        for (let x in data[i].base) {
+            info += `${x}:${data[i].base[x]} `; 
+            value += data[i].base[x];
             total = `Total: ${value}`
         }
         value = 0;
@@ -92,38 +114,23 @@ function createModal (i, x){
         let heart = document.createElement('button')
         heart.id = 'heart'
         heart.className = 'btn';
-        let icone = document.createElement('i');
-        icone.id = `like-${unit.id}`
-        icone.className = "fa-regular fa-heart";
-        let icone2 = document.createElement('i');
-        icone2.id = `like2-${unit.id}`
-        icone2.className = "fa-solid fa-heart";
-        modalContent.favorite = false;
-        icone2.style.display = 'none';
-        icone.onclick = () => {
-            if ( modalContent.favorite === false) {
-                icone2.style.display = 'flex';
-                modalContent.favorite = !modalContent.favorite;
-            } else if (modalContent.favorite === true){
-                icone2.style.display = 'none';
-                modalContent.favorite = !modalContent.favorite;
-            };
+        let icon = document.createElement('img');
+        icon.id = `like-${unit.id}`
+        icon.src = "./assets/heart.png";
         
-        };
-            right.appendChild(description);      
-            right.appendChild(stats);
-            mini.appendChild(serial);
-            mini.appendChild(picture);
-            mini.appendChild(name);
-            mini.appendChild(Type);
-            modal.appendChild(mini);   
-            modal.appendChild(hr);   
-            modal.appendChild(right);
-            heart.appendChild(icone);
-            heart.appendChild(icone2);
-            modal.appendChild(heart);
-            modalContent.appendChild(modal);
-            square.appendChild(modalContent);
+        right.appendChild(description);      
+        right.appendChild(stats);
+        mini.appendChild(serial);
+        mini.appendChild(picture);
+        mini.appendChild(name);
+        mini.appendChild(Type);
+        modal.appendChild(mini);   
+        modal.appendChild(hr);   
+        modal.appendChild(right);
+        heart.appendChild(icon);
+        modal.appendChild(heart);
+        modalContent.appendChild(modal);
+        square.appendChild(modalContent);
     }
 };
 createModal (i, x);
@@ -202,37 +209,98 @@ function pokeType(array, i, x){
     }
 };
 
-pokeType(myMock, i, x);
-
-document.addEventListener('click', (e) =>{
-    let elementId = e.target.id;
-    if (elementId !== '') {
-        let modal = document.getElementById(`modal-content-${(elementId)}`); 
-        modal.style.display = 'flex';
-        window.onclick = function(event) {
-            if (event.target == modal) {
-                modal.style.display = "none";
-            }
-        }
-    }
-  }
-);
+pokeType(data, i, x);
 
 function greenColor() {
-    let b = document.getElementById('try');
     if (window.location.href === "http://127.0.0.1:5500/pokedex/pokedex.html") {
         document.getElementById('home').style.background = 'rgba(148, 217, 126, 1)';
         document.getElementById('a-home').style.color = 'rgb(0, 0, 0)';
         document.getElementById('a-favorite').style.color = 'rgb(255, 255, 255)';
-        console.log('true');
     } else if (window.location.href === 'http://127.0.0.1:5500/pokedex/favorites.html'){
         document.getElementById('a-home').style.color = 'rgb(255, 255, 255)';
         document.getElementById('home').style.background = ' rgba(2, 1, 102, 1)';
         document.getElementById('favorite').style.background = 'rgba(148, 217, 126, 1)';
         document.getElementById('a-favorite').style.color = 'rgb(0, 0, 0)';
-        console.log('false');
-        console.log(window.location.href);
+
     }
-    
 };
 greenColor();
+
+const favorites = JSON.parse(localStorage.getItem('favorites')) || []; /*create favorite array*/
+let like = false;
+function areLike(i, x) {
+    for ( i ; i < x; i++) {
+        let unit = data[i]
+        let icon = document.getElementById(`like-${unit.id}`);
+        if (favorites.findIndex((e) => e.id === unit.id) != -1) {
+            icon.src = "./assets/heart2.png";
+        } else {
+            icon.src = "./assets/heart.png";
+        }
+        icon.onmouseover =  () => {
+            if (favorites.findIndex((e) => e.id === unit.id) === -1) {
+                icon.src = "./assets/heart-hover.png";
+            }
+        };
+        icon.onmouseout =  () => {
+            if (favorites.findIndex((e) => e.id === unit.id) != -1) {
+                icon.src = "./assets/heart2.png";
+            } else{
+                icon.src = "./assets/heart.png";
+            }
+        }
+        icon.onclick = () => {
+            if (favorites.findIndex((e) => e.id === unit.id) === -1) {
+                icon.src = "./assets/heart2.png";  
+                like = !like;
+                favorites.push(unit);
+                localStorage.setItem('favorites', JSON.stringify(favorites));
+            } else if (favorites.findIndex((e) => e.id === unit.id) != -1){
+                icon.src = "./assets/heart.png";
+                let itemIndex = favorites.findIndex((e) => e.id === unit.id);
+                like = !like;
+                if (itemIndex !== -1) {
+                    favorites.splice(itemIndex, 1);
+                    localStorage.setItem('favorites', JSON.stringify(favorites));
+                }
+            };
+        };
+        };
+    }
+areLike(i, x);
+
+// create pokemons cards in the favorite page.
+function showFavorite() {
+    let likePokemon = document.getElementById('like-pokemon');
+    let favoriteData = JSON.parse(localStorage.getItem('favorites'));
+    if (localStorage.getItem('favorites') != null) {
+        for (let i = 0; i < favoriteData.length; i++) {
+                const unit = favoriteData[i];
+                let square = document.createElement('div');
+                square.className = 'square'
+                square.id = unit.id;
+                let picture = document.createElement('img');
+                picture.className = 'picture';
+                picture.id = `${unit.id + 0.5}`;
+                picture.src = `${unit.image.hires}`;
+                picture.alt = `${unit.name.english}`;
+                let serial = document.createElement('p');
+                serial.id=`${unit.id}`;
+                serial.innerHTML ='#' + `${unit.id}`.padStart(3, '0');
+                serial.className = 'serial-number';
+                let name = document.createElement('p');
+                name.className = 'pokeName';
+                name.innerHTML = `${unit.name.english}`;
+                square.appendChild(serial);
+                square.appendChild(picture);
+                square.appendChild(name);
+                likePokemon.appendChild(square);       
+        }
+    }
+}
+showFavorite(); 
+
+document.addEventListener('click', (e) =>{
+    let elementId = e.target.className;
+    console.log(elementId);
+});
